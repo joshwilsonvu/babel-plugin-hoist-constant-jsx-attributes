@@ -1,0 +1,67 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "babel-plugin-hoist-constant-jsx-attributes",
+  "author": "Josh Wilson",
+  "module": "dist/babel-plugin-hoist-constant-jsx-attributes.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/babel-plugin-hoist-constant-jsx-attributes.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/babel-plugin-hoist-constant-jsx-attributes.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.12.13",
+    "@size-limit/preset-small-lib": "^4.10.1",
+    "@types/babel-core": "^6.25.6",
+    "babel-plugin-tester": "^10.0.0",
+    "husky": "^5.1.3",
+    "size-limit": "^4.10.1",
+    "ts-jest": "^26.5.3",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@types/babel-traverse": "^6.25.5",
+    "@types/babel-types": "^7.0.9",
+    "@types/micromatch": "^4.0.1",
+    "micromatch": "^4.0.2"
+  }
+}
