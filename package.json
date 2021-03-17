@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,25 +13,16 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint",
+    "test": "tsdx test",
+    "lint": "tsdx lint --fix",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
-  },
-  "peerDependencies": {
-    "react": ">=16"
   },
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
     }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
   },
   "name": "babel-plugin-hoist-constant-jsx-attributes",
   "author": "Josh Wilson",
@@ -62,6 +53,7 @@
     "@types/babel-traverse": "^6.25.5",
     "@types/babel-types": "^7.0.9",
     "@types/micromatch": "^4.0.1",
+    "deep-equal": "^2.0.5",
     "micromatch": "^4.0.2"
   }
 }
