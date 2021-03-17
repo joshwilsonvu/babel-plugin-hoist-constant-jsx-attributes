@@ -1,6 +1,7 @@
 {
   "version": "1.0.0",
   "license": "MIT",
+  "description": "Prevents unnecessary rerenders and GC pressure by hoisting constant objects out of JSX attributes and into the global scope, ex. for objects in a 'style' prop.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
