@@ -5,7 +5,6 @@
   "license": "MIT",
   "description": "Prevents unnecessary rerenders and GC pressure by hoisting constant objects out of JSX attributes and into the top-level scope, ex. for objects in a 'style' prop.",
   "main": "dist/index.js",
-  "module": "dist/babel-plugin-hoist-constant-jsx-attributes.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -15,18 +14,18 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test",
-    "lint": "tsdx lint --fix src test",
-    "prepare": "tsdx build",
+    "start": "tsc --watch",
+    "build": "rm -r dist && tsc",
+    "prepare": "yarn build",
+    "test": "jest",
+    "lint": "eslint --fix src test",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "publish": "np"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "yarn lint; prettier --fix;"
     }
   },
   "np": {
@@ -34,24 +33,25 @@
   },
   "size-limit": [
     {
-      "path": "dist/babel-plugin-hoist-constant-jsx-attributes.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "dist/babel-plugin-hoist-constant-jsx-attributes.esm.js",
+      "path": "dist/index.js",
       "limit": "10 KB"
     }
   ],
   "devDependencies": {
+    "@babel/core": "^7.13.10",
     "@babel/plugin-syntax-jsx": "^7.12.13",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@types/babel-core": "^6.25.6",
+    "@typescript-eslint/eslint-plugin": "^4.18.0",
+    "@typescript-eslint/parser": "^4.18.0",
     "babel-plugin-tester": "^10.0.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
     "husky": "^5.1.3",
+    "jest": "^26.6.3",
+    "prettier": "^2.2.1",
     "size-limit": "^4.10.1",
-    "ts-jest": "^26.5.3",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.1.0",
+    "ts-jest": "^26.5.4",
     "typescript": "^4.2.3"
   },
   "dependencies": {
@@ -60,6 +60,7 @@
     "@types/babel-types": "^7.0.9",
     "@types/micromatch": "^4.0.1",
     "deep-equal": "^2.0.5",
-    "micromatch": "^4.0.2"
+    "micromatch": "^4.0.2",
+    "tslib": "^2.1.0"
   }
 }

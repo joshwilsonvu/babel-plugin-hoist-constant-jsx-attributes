@@ -15,7 +15,7 @@ interface Opts {
 
 interface State {
   constantAttributes?: Array<{
-    exprPath: NodePath<BabelTypes.Expression>;
+    exprPath: NodePath;
     attrName?: string;
   }>;
   opts: Opts;
@@ -35,12 +35,11 @@ const buildDeepFreezeFnDecl = template.statement(
       }
     })
     return Object.freeze(object);
-  };
-`,
+  };`,
   { preserveComments: true }
 );
 const buildDeepFreezeObjectInDevelopment = template.expression(
-  `(process.env.NODE_ENV === "development" ? /*#__PURE__*/ DEEP_FREEZE_FN_NAME(OBJ) : OBJ)`,
+  `process.env.NODE_ENV === "development" ? /*#__PURE__*/ DEEP_FREEZE_FN_NAME(OBJ) : OBJ`,
   {
     preserveComments: true,
     placeholderPattern: /^(?:DEEP_FREEZE_FN_NAME|OBJ)$/,
@@ -63,7 +62,7 @@ export default function babelPluginHoistConstantJsxAttributes({
       path.isNullLiteral() ||
       path.isBooleanLiteral() ||
       (path.isUnaryExpression({ operator: '-' }) &&
-        path.get('argument').isNumericLiteral()) ||
+        (path.get('argument') as NodePath).isNumericLiteral()) ||
       isNontrivialConstant(path)
     );
   }
@@ -138,9 +137,7 @@ export default function babelPluginHoistConstantJsxAttributes({
         }
 
         // Check if the expression is a constant expression that requires an allocation
-        const exprPath = valuePath.get('expression') as NodePath<
-          BabelTypes.Expression
-        >;
+        const exprPath = valuePath.get('expression') as NodePath;
         if (!isNontrivialConstant(exprPath)) {
           return;
         }
@@ -178,7 +175,10 @@ export default function babelPluginHoistConstantJsxAttributes({
                     );
                   } else {
                     declarators.push(
-                      t.variableDeclarator(reference, exprPath.node)
+                      t.variableDeclarator(
+                        reference,
+                        exprPath.node as BabelTypes.Expression
+                      )
                     );
                   }
                   exprPath.replaceWith(reference);
@@ -196,7 +196,10 @@ export default function babelPluginHoistConstantJsxAttributes({
                 (declarators, { exprPath, attrName }) => {
                   const reference = path.scope.generateUidIdentifier(attrName);
                   declarators.push(
-                    t.variableDeclarator(reference, exprPath.node)
+                    t.variableDeclarator(
+                      reference,
+                      exprPath.node as BabelTypes.Expression
+                    )
                   );
                   exprPath.replaceWith(reference);
                   return declarators;
