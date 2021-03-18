@@ -1,160 +1,91 @@
-# TSDX React User Guide
+# babel-plugin-hoist-constant-jsx-attributes
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+![Version](https://img.shields.io/github/package-json/v/joshwilsonvu/babel-plugin-hoist-constant-jsx-attributes)
+![NPM Version](https://img.shields.io/npm/v/babel-plugin-hoist-constant-jsx-attributes)
+![License](https://img.shields.io/github/license/joshwilsonvu/babel-plugin-hoist-constant-jsx-attributes)
+![Build Status](https://img.shields.io/github/workflow/status/joshwilsonvu/babel-plugin-hoist-constant-jsx-attributes/CI)
+![Supported Node Version](https://img.shields.io/node/v/babel-plugin-hoist-constant-jsx-attributes)
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+This plugin can reduce React rerenders and garbage collection pressure by pulling
+constant object attribute values (like `style={{ color: 'red' }}`) out of functions 
+and into the highest possible scope. This means the objects will only get allocated once,
+and they will keep the same identity across renders. 
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+Objects are only pulled out if they are plain old data and don't reference any 
+variables, so more dynamic use cases will still work as written.
 
-## Commands
+## Example
 
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
-
-```bash
-npm start # or yarn start
-```
-
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
-
-Then run the example inside another:
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
-
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
+**In**
 
 ```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+const Component = () => <div style={{ color: 'red', fontSize: 14 }}>Text</div>;
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+**Out**
 
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Deploying the Example Playground
-
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+```js
+const _style = { color: 'red', fontSize: 14 };
+const Component = () => <div style={_style}>Text</div>;
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+## Options
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
+### `include`
 
-## Named Exports
+`RegExp`, or `string` to be matched with [`micromatch`](https://github.com/micromatch/micromatch)
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+Only hoist attribute values if the *element* name matches.
 
-## Including Styles
+### `exclude`
 
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
+`RegExp`, or `string` to be matched with [`micromatch`](https://github.com/micromatch/micromatch)
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+Only hoist attributes values if the *element* name does not match.
 
-## Publishing to NPM
+### `includeAttributes`
 
-We recommend using [np](https://github.com/sindresorhus/np).
+`RegExp`, or `string` to be matched with [`micromatch`](https://github.com/micromatch/micromatch)
 
-## Usage with Lerna
+Only hoist attribute values if the *attribute* name matches.
 
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
+### `excludeAttributes`
 
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
+`RegExp`, or `string` to be matched with [`micromatch`](https://github.com/micromatch/micromatch)
 
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
+Only hoist attributes values if the *attribute* name does not match.
 
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
+### `lowerCaseOnly`
 
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+`boolean`, defaults to `false`
+
+Only hoist object attribute values on primitive elements like `div` and `button`.
+
+### `freezeObjects`
+
+`false`, `'development'`, or `'always'`, defaults to `false`.
+
+If set to `'development'`, check at runtime to see if `process.env.NODE_ENV === 'development'`,
+and if so deeply freeze hoisted objects. If set to `'always'`, deeply
+freeze hoisted objects unconditionally.
+
+Use this option for extra safety if you want to ensure that the attribute values 
+are never mutated. If there is an attempt to mutate a hoisted attribute value, an
+exception will be thrown. Slightly increases the compiled code size.
+
+## Note
+
+The React team considers this transformation unsafe to run by default, because it 
+*is* possible to rely on object attribute values to have different identities every 
+render. See [this GitHub issue](https://github.com/facebook/react/issues/3226) 
+for more information. 
+
+*However*, the vast majority of cases will benefit from this transformation. The
+main reason they consider it unsafe is precisely because it can reduce the number
+of times a component rerenders, which is likely to be what you want. Unless you were
+to intentionally tinker with object referential equality, or mutate received `props`
+—and you would know if you were—this transformation will be safe.
+
+Still, to be extra careful, you can set the `lowerCaseOnly` plugin option to `true`.
+You can also set the `freezeObjects` plugin option to `'development'` or `'always'`
+to receive an error if a component tries to mutate its `props`.

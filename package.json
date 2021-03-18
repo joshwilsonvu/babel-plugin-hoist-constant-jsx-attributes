@@ -1,8 +1,11 @@
 {
+  "name": "babel-plugin-hoist-constant-jsx-attributes",
+  "author": "Josh Wilson",
   "version": "1.0.0",
   "license": "MIT",
-  "description": "Prevents unnecessary rerenders and GC pressure by hoisting constant objects out of JSX attributes and into the global scope, ex. for objects in a 'style' prop.",
+  "description": "Prevents unnecessary rerenders and GC pressure by hoisting constant objects out of JSX attributes and into the top-level scope, ex. for objects in a 'style' prop.",
   "main": "dist/index.js",
+  "module": "dist/babel-plugin-hoist-constant-jsx-attributes.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -15,19 +18,20 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test",
-    "lint": "tsdx lint --fix",
+    "lint": "tsdx lint --fix src test",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "publish": "np"
   },
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
     }
   },
-  "name": "babel-plugin-hoist-constant-jsx-attributes",
-  "author": "Josh Wilson",
-  "module": "dist/babel-plugin-hoist-constant-jsx-attributes.esm.js",
+  "np": {
+    "branch": "main"
+  },
   "size-limit": [
     {
       "path": "dist/babel-plugin-hoist-constant-jsx-attributes.cjs.production.min.js",
@@ -51,6 +55,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "@babel/template": "^7.12.13",
     "@types/babel-traverse": "^6.25.5",
     "@types/babel-types": "^7.0.9",
     "@types/micromatch": "^4.0.1",
