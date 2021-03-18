@@ -21,7 +21,7 @@
     "lint": "eslint --fix src test",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "publish": "np"
+    "release": "np"
   },
   "husky": {
     "hooks": {
