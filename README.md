@@ -29,6 +29,22 @@ const _style = { color: 'red', fontSize: 14 };
 const Component = () => <div style={_style}>Text</div>;
 ```
 
+## Install
+
+```bash
+# npm
+npm i --save-dev babel-plugin-hoist-constant-jsx-attributes
+# yarn
+yarn add --dev babel-plugin-hoist-constant-jsx-attributes
+```
+```json
+{
+  "plugins": [
+    ["babel-plugin-hoist-constant-jsx-attributes", { /* options (see below) */ }]
+  ]
+}
+```
+
 ## Options
 
 ### `include`
@@ -60,6 +76,15 @@ Only hoist attributes values if the *attribute* name does not match.
 `boolean`, defaults to `false`
 
 Only hoist object attribute values on primitive elements like `div` and `button`.
+
+### `alwaysHoist`
+
+`boolean`, defaults to `false`
+
+By default, this plugin only hoists attribute values if the JSX element is contained
+in a function or method. This is not recommended, since otherwise the problems this
+plugin solves don't occur. Setting this option to `true` will hoist even if the JSX
+element is at the top level.
 
 ### `freezeObjects`
 
