@@ -25,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint; prettier --fix;"
+      "pre-commit": "yarn lint && prettier --fix"
     }
   },
   "np": {
