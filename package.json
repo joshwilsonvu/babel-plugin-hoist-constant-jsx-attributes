@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-hoist-constant-jsx-attributes",
   "author": "Josh Wilson",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "description": "Prevents unnecessary rerenders and GC pressure by hoisting constant objects out of JSX attributes and into the top-level scope, ex. for objects in a 'style' prop.",
   "main": "dist/index.js",
@@ -60,7 +60,6 @@
     "@types/babel-traverse": "^6.25.5",
     "@types/babel-types": "^7.0.9",
     "@types/micromatch": "^4.0.1",
-    "deep-equal": "^2.0.5",
     "micromatch": "^4.0.2",
     "tslib": "^2.1.0"
   },

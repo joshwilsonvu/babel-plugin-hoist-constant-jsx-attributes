@@ -82,9 +82,9 @@ Only hoist object attribute values on primitive elements like `div` and `button`
 `boolean`, defaults to `false`
 
 By default, this plugin only hoists attribute values if the JSX element is contained
-in a function or method. This is not recommended, since otherwise the problems this
-plugin solves don't occur. Setting this option to `true` will hoist even if the JSX
-element is at the top level.
+in a function or method. Using this option is not recommended, since otherwise the 
+problems this plugin solves don't occur. Setting this option to `true` will hoist even
+if the JSX element is at the top level.
 
 ### `freezeObjects`
 
