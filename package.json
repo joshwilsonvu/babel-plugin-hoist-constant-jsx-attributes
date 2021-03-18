@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "tsc --watch",
-    "build": "rm -r dist && tsc",
+    "build": "tsc",
     "prepare": "yarn build",
     "test": "jest",
     "lint": "eslint --fix src test",
